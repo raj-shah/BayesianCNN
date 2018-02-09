@@ -1,1 +1,1 @@
-# MLSALT4-BayesianCNN
+# MLSALT4
