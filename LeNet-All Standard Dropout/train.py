@@ -44,7 +44,7 @@ def train():
                                                 feed_dict={x_: batch[0], y: batch[1], keep_prob: 0.5})
                 writer.add_summary(summary, i)
                 if i % 1000 == 0:
-                    print('Iter {} Accuracy: {}'.format(i, cur_loss))
+                    print('Iter {} Loss: {}'.format(i, cur_loss))
                     validation_accuracy = accuracy.eval(feed_dict={x_: mnist.test.images, y: mnist.test.labels, keep_prob: 1.0}) #evaluate test set
                     print('Test_Accuracy: {}'.format(validation_accuracy))
 
