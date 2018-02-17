@@ -22,7 +22,7 @@ def train():
         x = tf.reshape(x_,[-1,28,28,1],name = 'x')   #mnist dataset is shape 28,28,1
         y = tf.placeholder(shape=[None, 10], dtype=tf.float32, name='y') #10 labels
         keep_prob = tf.placeholder(tf.float32, name='dropout_prob')
-        global_step = tf.train.get_or_create_global_step()
+        global_step = tf.contrib.framework.get_or_create_global_step()
 
         logits = model.inference(x, keep_prob=keep_prob)
         loss = model.loss(logits=logits, labels=y)
