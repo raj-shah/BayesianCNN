@@ -1,4 +1,5 @@
 import tensorflow as tf
+import poly_inverse_time_decay
 
 
 class Model(object):
@@ -50,7 +51,8 @@ class Model(object):
         #should probably make these variables arguements but cba
         decay_step = 1
         decay_rate = 0.0001 #decay rate
-        learning_rate = tf.train.inverse_time_decay(self._learning_rate, global_step, decay_step, decay_rate)
+        power = 0.75 
+        learning_rate = poly_inverse_time_decay(self._learning_rate, global_step, decay_step, decay_rate, power)
         optimizer = tf.train.GradientDescentOptimizer(learning_rate)
         train_op = optimizer.minimize(
             loss=loss,
