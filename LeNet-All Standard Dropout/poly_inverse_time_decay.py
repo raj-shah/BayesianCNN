@@ -1,4 +1,4 @@
-def inverse_time_decay(learning_rate,
+def poly_inverse_time_decay(learning_rate,
                        global_step,
                        decay_steps,
                        decay_rate,
