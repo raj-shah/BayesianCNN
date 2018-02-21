@@ -54,7 +54,7 @@ class Model(object):
         #learning_rate = tf.train.inverse_time_decay(self._learning_rate, global_step, decay_step, decay_rate)
         learning_rate = td.poly_inverse_time_decay(self._learning_rate, global_step, decay_steps = 1, decay_rate =  decay_rate, power = 0.75)
         #optimizer = tf.train.GradientDescentOptimizer(learning_rate)
-        optimizer = tf.train.MomentumOptimizer(learning_rate, momentum = 0.9)
+        optimizer = tf.train.MomentumOptimizer(learning_rate, momentum = 0.9)#, use_nesterov=True)
         train_op = optimizer.minimize(
             loss=loss,
             global_step=tf.train.get_global_step())
