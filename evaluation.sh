@@ -10,12 +10,17 @@ do
 	echo $check
 	echo $n >> trainAccuracies.log
 	python evaluate_mc_dropout.py --checkpoint_file_path $check >> trainAccuracies.log
-done
-  #echo "\n"
-	#if (( $n % 100000 == 0 )) 
-	#then
-	#	mv $f checkpoints.save/
-	#else
+	if (( $n % 1000 == 0 )) 
+	then
+		for file in $(ls -1v $check*)
+			do
+			mv $file checkpoints.save/
+			done
+	else
+		for file in $(ls -1v $check*)
+			do
+			rm $file checkpoints.save/
+			done
 		#rm $f
-	#fi
-#done
+	fi
+done
