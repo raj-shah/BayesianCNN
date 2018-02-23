@@ -44,9 +44,11 @@ def train():
                                                 feed_dict={x_: batch[0], y: batch[1], keep_prob: 0.5})
                 writer.add_summary(summary, i)
                 if i % 10000 == 0:
-                    print('Iter {} Loss: {}'.format(i, cur_loss))
+                    f = open('trainingStdDrop.log', 'a+' )
+                    f.write('Iter {} Loss: {}'.format(i, cur_loss))
                     validation_accuracy = accuracy.eval(feed_dict={x_: mnist.test.images, y: mnist.test.labels, keep_prob: 1.0}) #evaluate test set
-                    print('Test_Accuracy: {}'.format(validation_accuracy))
+                    f.write('Test_Accuracy: {}'.format(validation_accuracy))
+                    f.close()
                     saver.save(sess, FLAGS.checkpoint_file_path+"-"+str(i))
 
                 if i == FLAGS.num_iter - 1:
