@@ -47,6 +47,7 @@ def train():
                     print('Iter {} Loss: {}'.format(i, cur_loss))
                     validation_accuracy = accuracy.eval(feed_dict={x_: mnist.test.images, y: mnist.test.labels, keep_prob: 1.0}) #evaluate test set
                     print('Test_Accuracy: {}'.format(validation_accuracy))
+                    saver.save(sess, FLAGS.checkpoint_file_path+"-"+str(i))
 
                 if i == FLAGS.num_iter - 1:
                     saver.save(sess, FLAGS.checkpoint_file_path, global_step)
@@ -58,7 +59,7 @@ def main(argv=None):
 if __name__ == '__main__':
     tf.app.flags.DEFINE_integer('batch_size', 64, 'size of training batches')
     tf.app.flags.DEFINE_integer('num_iter', 10000000, 'number of training iterations')
-    tf.app.flags.DEFINE_string('checkpoint_file_path', 'checkpoints/model.ckpt-10000', 'path to checkpoint file')
+    tf.app.flags.DEFINE_string('checkpoint_file_path', 'checkpoints/model.ckpt', 'path to checkpoint file')
     tf.app.flags.DEFINE_string('summary_dir', 'graphs', 'path to directory for storing summaries')
 
     tf.app.run()
