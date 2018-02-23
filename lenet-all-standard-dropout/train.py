@@ -48,7 +48,7 @@ def train():
                     #f.write('Iter {} Loss: {} \n'.format(i, cur_loss))
                     validation_accuracy = accuracy.eval(feed_dict={x_: mnist.test.images, y: mnist.test.labels, keep_prob: 1.0}) #evaluate test set
                     #f.write('Test_Accuracy: {} \n'.format(validation_accuracy))
-                    f.write('{}, {}, {} \n').format(i, cur_loss, validation_accuracy)
+                    f.write('{}, {}, {} \n').format(str(i), cur_loss, validation_accuracy)
                     f.close()
                     saver.save(sess, FLAGS.checkpoint_file_path+"-"+str(i))
 
