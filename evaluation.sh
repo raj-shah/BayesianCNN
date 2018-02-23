@@ -8,8 +8,8 @@ do
 	check=${f%.*}
 	n=${check#checkpoints/model.ckpt-}
 	echo $check
-	echo $n >> trainAccuracies.log
-	python3 evaluate_mc_dropout_py3.py --checkpoint_file_path $check >> trainAccuracies.log
+	echo $n >> trainingAccuracies.log
+	python3 evaluate_mc_dropout_py3.py --checkpoint_file_path $check >> process.log
 	if (( $n % 10000 == 0 )) 
 	then
 		for file in $(ls -1v $check*)
