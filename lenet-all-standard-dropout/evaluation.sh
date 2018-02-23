@@ -17,7 +17,7 @@ do
 		for file in $(ls -1v $check*)
 			do
 			mv $file checkpoints.save/
-			echo $check | mail -s "Evaluations script" david.r.burt94@gmail.com
+			echo $check | mail -s "Evaluations script" david.r.burt94@gmail.com # PLEASE CHANGE EMAIL
 			done
 	else
 		for file in $(ls -1v $check*)
