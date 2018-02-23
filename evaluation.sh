@@ -20,8 +20,7 @@ do
 	else
 		for file in $(ls -1v $check*)
 			do
-			rm $file checkpoints.save/
+			rm $file
 			done
-		#rm $f
 	fi
 done
