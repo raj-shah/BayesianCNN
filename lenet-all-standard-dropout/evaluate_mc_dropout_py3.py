@@ -42,7 +42,7 @@ def evaluate():
 
             saver.restore(sess, FLAGS.checkpoint_file_path)
 	    #Monte Carlo stocastic forward pass:
-            for i in range(50):
+            for i in range(50):		# change hard-coded T = forward passes
                 softmax_prob_layer.append(sess.run([softmax_prob],feed_dict={x_: mnist.test.images, y: mnist.test.labels}))
         
             softmax_prob_sum = tf.convert_to_tensor(np.array(softmax_prob_layer))
