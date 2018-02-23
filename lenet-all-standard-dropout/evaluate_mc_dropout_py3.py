@@ -52,7 +52,7 @@ def evaluate():
             accuracy = model.accuracy(softmax_prob_average, y)
             total_accuracy = sess.run([accuracy],feed_dict={x_: mnist.test.images, y: mnist.test.labels})
             print('Test accuracy: {}'.format(total_accuracy))
-	    f = open('trainingAccuracies','a+');
+	    f = open('trainingAccuracies.log','a+');
 	    f.write('Test accuracy: {}'.format(total_accuracy))
 	    #print(sess.run([softmax_prob_average],feed_dict={x_: mnist.test.images, y: mnist.test.labels}))
 	    #print softmax_prob_average
