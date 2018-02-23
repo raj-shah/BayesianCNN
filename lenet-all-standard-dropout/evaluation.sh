@@ -12,7 +12,7 @@ do
 	echo $check
 	echo $n >> trainingAccuracies.log
 	python3 evaluate_mc_dropout_py3.py --checkpoint_file_path $check >> process.log
-	if (( $n % 10000 == 0 )) 
+	if (( $n % 100000 == 0 )) 
 	then
 		for file in $(ls -1v $check*)
 			do
