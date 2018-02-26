@@ -3,7 +3,7 @@
 #THIS SHOULD WORK IF checkpoints are saved to: checkpoints/model.ckpt+"-"+str(i), needs a bit of cleaning up to succesfully remove and move checkpoints
 #!/bin/bash
 
-mkdir checkpoints.save
+#mkdir checkpoints.save
 
 for f in $(ls -1v checkpoints/*.index)
 do
