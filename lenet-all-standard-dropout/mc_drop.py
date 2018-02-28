@@ -19,7 +19,7 @@ def evaluate():
 		logits = model.inference(x, keep_prob=0.5)
 		softmax = tf.nn.softmax(logits)
 		shape = tf.shape(softmax)
-		saver = tf.train.Saver()
+		saver = tf.train.Saver(max_to_keep = None)
 
 		mean = tf.reduce_mean(softmax_tensors,0)
 		accuracy = model.accuracy(mean,y)

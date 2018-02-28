@@ -32,7 +32,7 @@ def train():
         train_op = model.train(loss, global_step=global_step)
 
         init = tf.global_variables_initializer() 
-        saver = tf.train.Saver(max_to_keep = None)
+        saver = tf.train.Saver(max_to_keep = 100000)
 
         with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
             writer = tf.summary.FileWriter(FLAGS.summary_dir, sess.graph)
@@ -45,15 +45,10 @@ def train():
                 writer.add_summary(summary, i)
                 if i % 10000 == 0:
                     f = open('trainingStdDrop.log', 'a+')
-                    #f.write('Iter {} Loss: {} \n'.format(i, cur_loss))
-                    validation_accuracy = accuracy.eval(feed_dict={x_: mnist.test.images, y: mnist.test.labels, keep_prob: 1.0}) #evaluate test set
-                    #f.write('Test_Accuracy: {} \n'.format(validation_accuracy))
+                    validation_accuracy = accuracy.eval(feed_dict={x_: mnist.test.images, y: mnist.test.labels, keep_prob: 1.0}) 
                     f.write('{}, {}, {} \n'.format(i, cur_loss, validation_accuracy))
                     f.close()
                     saver.save(sess, FLAGS.checkpoint_file_path+"-"+str(i))
-
-                if i == FLAGS.num_iter - 1:
-                    saver.save(sess, FLAGS.checkpoint_file_path, global_step)
 
 def main(argv=None):
     train()
