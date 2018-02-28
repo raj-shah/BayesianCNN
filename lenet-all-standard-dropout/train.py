@@ -32,7 +32,7 @@ def train():
         train_op = model.train(loss, global_step=global_step)
 
         init = tf.global_variables_initializer() 
-        saver = tf.train.Saver()
+        saver = tf.train.Saver(max_to_keep = None)
 
         with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
             writer = tf.summary.FileWriter(FLAGS.summary_dir, sess.graph)
@@ -44,7 +44,7 @@ def train():
                                                 feed_dict={x_: batch[0], y: batch[1], keep_prob: 0.5})
                 writer.add_summary(summary, i)
                 if i % 10000 == 0:
-                    f = open('trainingStdDrop.log', 'a+' )
+                    f = open('trainingStdDrop.log', 'a+')
                     #f.write('Iter {} Loss: {} \n'.format(i, cur_loss))
                     validation_accuracy = accuracy.eval(feed_dict={x_: mnist.test.images, y: mnist.test.labels, keep_prob: 1.0}) #evaluate test set
                     #f.write('Test_Accuracy: {} \n'.format(validation_accuracy))
