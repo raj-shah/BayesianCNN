@@ -1,7 +1,7 @@
 
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
-from Model import Model
+from Model_CIFAR10 import Model
 import CIFAR10
 import numpy as np
 import math
