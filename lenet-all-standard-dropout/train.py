@@ -34,21 +34,21 @@ def train():
         init = tf.global_variables_initializer() 
         saver = tf.train.Saver(max_to_keep = 100000)
 
-    with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
-        writer = tf.summary.FileWriter(FLAGS.summary_dir, sess.graph)
-        sess.run(init)
-        for i in range(FLAGS.num_iter):
-            batch = mnist.train.next_batch(FLAGS.batch_size)
+        with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
+            writer = tf.summary.FileWriter(FLAGS.summary_dir, sess.graph)
+            sess.run(init)
+            for i in range(FLAGS.num_iter):
+                batch = mnist.train.next_batch(FLAGS.batch_size)
 
-            _, cur_loss, summary = sess.run([train_op, loss, summary_op],
-                                            feed_dict={x_: batch[0], y: batch[1], keep_prob: 0.5})
-            writer.add_summary(summary, i)
-            if i % 10000 == 0:
-                f = open('trainingStdDrop.log', 'a+')
-                validation_accuracy = accuracy.eval(feed_dict={x_: mnist.test.images, y: mnist.test.labels, keep_prob: 1.0}) 
-                f.write('{}, {}, {} \n'.format(i, cur_loss, validation_accuracy))
-                f.close()
-                saver.save(sess, FLAGS.checkpoint_file_path+"-"+str(i))
+                _, cur_loss, summary = sess.run([train_op, loss, summary_op],
+                                                feed_dict={x_: batch[0], y: batch[1], keep_prob: 0.5})
+                writer.add_summary(summary, i)
+                if i % 10000 == 0:
+                    f = open('trainingStdDrop.log', 'a+')
+                    validation_accuracy = accuracy.eval(feed_dict={x_: mnist.test.images, y: mnist.test.labels, keep_prob: 1.0}) 
+                    f.write('{}, {}, {} \n'.format(i, cur_loss, validation_accuracy))
+                    f.close()
+                    saver.save(sess, FLAGS.checkpoint_file_path+"-"+str(i))
 
 def main(argv=None):
     train()
