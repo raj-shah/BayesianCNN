@@ -6,20 +6,20 @@
 #4 Train the network, the evaluation script will be run every 3 minutes, moving stuff over to a new directory
 #!/bin/bash
 
-mkdir checkpoints.save
+#mkdir checkpoints.save
 
-for file in $(ls -1v checkpoints/*)#.index)
+for f in $(ls -1v /home/si318/Desktop/MLSALT4/lenet-all-standard-dropout/checkpoints/*.index)
 do
-	#check=${f%.*}
-	#n=${check#checkpoints/model.ckpt-}
-	#echo $check
-	#echo $n >> trainingAccuracies.log
-	#python3 evaluate_mc_dropout_py3.py --checkpoint_file_path $check >> process.log
+	check=${f%.*}
+	echo $f
+	n=${check#/home/si318/Desktop/MLSALT4/lenet-all-standard-dropout/checkpoints/model.ckpt-}	echo $check
+	echo $n >> trainingAccuracies.log
+	python3 mc_drop.py --checkpoint_file_path $check >> process.log
 	#if (( $n % 10000 == 0 )) #This is currently trivially sa
 	#then
 		#for file in $(ls -1v $check*)
 			#do
-	mv -f $file checkpoints.save/
+	#mv -f $file checkpoints.save/
 			#echo $check | mail -s "Evaluations script" david.r.burt94@gmail.com # PLEASE CHANGE EMAIL
 			#done
 	#else
