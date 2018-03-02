@@ -15,11 +15,11 @@ class Model(object):
             conv = self._create_conv2d(images, kernel) #create the conv layer
             bias = self._create_bias([192]) #create bias variable
             preactivation = tf.nn.bias_add(conv, bias) #add bias
-            conv1 = tf.nn.relu(preactivation, name=scope.name) #put through RELU activation function. #output size [batch_size, 28,28,20]
+            conv1 = tf.nn.relu(preactivation, name=scope.name) #put through RELU activation function. #output size [batch_size, 32,32,192]
             self._activation_summary(conv1) #this is for TensorBoard visualization
 
         dropout1 = tf.nn.dropout(conv1, keep_prob) #do dropout
-        h_pool1 = self._create_max_pool_2x2(dropout1) #do max pooling. output size [batch_size, 14,14,20]
+        h_pool1 = self._create_max_pool_2x2(dropout1) #do max pooling. output size [batch_size, 16,16,192]
 
         with tf.variable_scope('conv2') as scope:
 	    #each layer has 192 units in CIFAR10
@@ -27,17 +27,17 @@ class Model(object):
             conv = self._create_conv2d(h_pool1, kernel)
             bias = self._create_bias([192])
             preactivation = tf.nn.bias_add(conv, bias)
-            conv2 = tf.nn.relu(preactivation, name=scope.name) #outputsize [batch_size, 14,14,50]
+            conv2 = tf.nn.relu(preactivation, name=scope.name) #outputsize [batch_size, 16,16,192]
             self._activation_summary(conv2)
 
 
         dropout2 = tf.nn.dropout(conv2, keep_prob)
-        h_pool2 = self._create_max_pool_2x2(dropout2) #output size [batch_size, 7, 7, 50]
+        h_pool2 = self._create_max_pool_2x2(dropout2) #output size [batch_size, 8, 8, 192]
 
         with tf.variable_scope('dense') as scope:
-            reshape = tf.reshape(h_pool2, [-1, 7 * 7 * 192])
+            reshape = tf.reshape(h_pool2, [-1, 8 * 8 * 192])
 	    #last inner-product layer has 1000 units instead of 500 in MNIST
-            W_dense = self._create_weights([7 * 7 * 192, 1000])
+            W_dense = self._create_weights([8 * 8 * 192, 1000])
             b_dense = self._create_bias([1000])
             dense = tf.nn.relu(tf.matmul(reshape, W_dense) + b_dense, name=scope.name)
             self._activation_summary(dense)
