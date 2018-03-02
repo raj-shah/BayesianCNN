@@ -61,10 +61,12 @@ class Model(object):
     def loss(self, logits, labels):
         with tf.variable_scope('loss') as scope:
             cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=logits, labels=labels)
-            cost = tf.reduce_mean(cross_entropy, name=scope.name) #computes the mean loss = cost. Minimizing mean loss.
-            tf.summary.scalar('cost', cost)
+            cross_entropy_mean = tf.reduce_mean(cross_entropy, name=scope.name) #computes the mean loss = cost. Minimizing mean loss.
+            tf.add_to_collection('losses', cross_entropy_mean)
 
-        return cost
+            tf.summary.scalar('cost', tf.add_n(tf.get_collection('losses')))
+
+        return tf.add_n(tf.get_collection('losses'), name='total_loss')
 
     def accuracy(self, logits, y):
         with tf.variable_scope('accuracy') as scope:
@@ -86,7 +88,10 @@ class Model(object):
                               padding='SAME') # padding set so the output feature maps are the same size as the input feature maps.
 
     def _create_weights(self, shape):
-        return tf.Variable(tf.truncated_normal(shape=shape, stddev=0.1, dtype=tf.float32))
+        var =  tf.Variable(tf.truncated_normal(shape=shape, stddev=0.1, dtype=tf.float32))
+        weight_decay = tf.multiply(tf.nn.l2_loss(var), 0.0005, name='weight_loss')
+        tf.add_to_collection('losses', weight_decay)
+        return var
 
     def _create_bias(self, shape):
         return tf.Variable(tf.constant(1., shape=shape, dtype=tf.float32))
