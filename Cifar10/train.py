@@ -55,7 +55,7 @@ def train():
                     permutation=np.random.permutation(input_size) #create a list with random indexes
                     increment = 0 #restart the increment variable 
 
-                batch_idx = permutation[increment*batch_size:min((increment+1)*batch_size,input_size)]
+                batch_idx = permutation[increment*batch_size:(increment+1)*batch_size]
                 increment += 1
                 image_batch=images_train[batch_idx] #this is a list with batch size number of elements. Each element is a (32,32,3) array (images)
                 label_batch=labels_train[batch_idx] #this is a list with batch size number of elements. Each element is a 10 dimensional vector (1 hot encode)
@@ -64,12 +64,12 @@ def train():
                 _, cur_loss, summary = sess.run([train_op, loss, summary_op],
                                                 feed_dict={x: image_batch, y: label_batch, keep_prob: 0.5})
                 writer.add_summary(summary, i)
-                # if i % 10000 == 0:
-                #     f = open('trainingStdDrop.log', 'a+')
-                #     validation_accuracy = accuracy.eval(feed_dict={x: mnist.test.images, y: mnist.test.labels, keep_prob: 1.0}) 
-                #     f.write('{}, {}, {} \n'.format(i, cur_loss, validation_accuracy))
-                #     f.close()
-                #     saver.save(sess, FLAGS.checkpoint_file_path+"-"+str(i))
+                if i % 500 == 0:
+                    f = open('trainingStdDrop.log', 'a+')
+                    validation_accuracy = accuracy.eval(feed_dict={x: images_test, y: labels_test, keep_prob: 1.0}) 
+                    f.write('{}, {}, {} \n'.format(i, cur_loss, validation_accuracy))
+                    f.close()
+                    saver.save(sess, FLAGS.checkpoint_file_path+"-"+str(i))
 
 def main(argv=None):
     train()
@@ -77,7 +77,7 @@ def main(argv=None):
 
 if __name__ == '__main__':
     tf.app.flags.DEFINE_integer('batch_size', 128, 'size of training batches')
-    tf.app.flags.DEFINE_integer('num_iter', 100000, 'number of training iterations')
+    tf.app.flags.DEFINE_integer('num_iter', 10000000, 'number of training iterations')
     tf.app.flags.DEFINE_string('checkpoint_file_path', 'checkpoints/model.ckpt', 'path to checkpoint file')
     tf.app.flags.DEFINE_string('summary_dir', 'graphs', 'path to directory for storing summaries')
 
