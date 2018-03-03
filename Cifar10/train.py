@@ -55,7 +55,7 @@ def train():
                     permutation=np.random.permutation(input_size) #create a list with random indexes
                     increment = 0 #restart the increment variable 
 
-                batch_idx = permutation[increment*batch_size:(increment+1)*batch_size]
+                batch_idx = permutation[increment*batch_size:min((increment+1)*batch_size,input_size)]
                 increment += 1
                 image_batch=images_train[batch_idx] #this is a list with batch size number of elements. Each element is a (32,32,3) array (images)
                 label_batch=labels_train[batch_idx] #this is a list with batch size number of elements. Each element is a 10 dimensional vector (1 hot encode)
