@@ -3,44 +3,48 @@ import poly_inverse_time_decay as td
 
 
 class Model(object):
-    def __init__(self, batch_size=128, learning_rate=0.01, num_labels=10):
+    def __init__(self, batch_size=64 , learning_rate=0.01, num_labels=10):
         self._batch_size = batch_size
         self._learning_rate = learning_rate
         self._num_labels = num_labels
 
     def inference(self, images, keep_prob):
         with tf.variable_scope('conv1') as scope:
-            kernel = self._create_weights([5, 5, 1, 20]) #[filter_height, filter_width, in_channels, out_channels]
+	    #each layer has 192 output in CIFAR10
+            kernel = self._create_weights([5, 5, 3, 192]) #[filter_height, filter_width, in_channels, out_channels]
             conv = self._create_conv2d(images, kernel) #create the conv layer
-            bias = self._create_bias([20]) #create bias variable
+            bias = self._create_bias([192]) #create bias variable
             preactivation = tf.nn.bias_add(conv, bias) #add bias
-            conv1 = tf.nn.relu(preactivation, name=scope.name) #put through RELU activation function. #output size [batch_size, 28,28,20]
+            conv1 = tf.nn.relu(preactivation, name=scope.name) #put through RELU activation function. #output size [batch_size, 32,32,192]
             self._activation_summary(conv1) #this is for TensorBoard visualization
 
         dropout1 = tf.nn.dropout(conv1, keep_prob) #do dropout
-        h_pool1 = self._create_max_pool_2x2(dropout1) #do max pooling. output size [batch_size, 14,14,20]
+        h_pool1 = self._create_max_pool_2x2(dropout1) #do max pooling. output size [batch_size, 16,16,192]
 
         with tf.variable_scope('conv2') as scope:
-            kernel = self._create_weights([5, 5, 20, 50])
+	    #each layer has 192 units in CIFAR10
+            kernel = self._create_weights([5, 5, 192, 192])
             conv = self._create_conv2d(h_pool1, kernel)
-            bias = self._create_bias([50])
+            bias = self._create_bias([192])
             preactivation = tf.nn.bias_add(conv, bias)
-            conv2 = tf.nn.relu(preactivation, name=scope.name) #outputsize [batch_size, 14,14,50]
+            conv2 = tf.nn.relu(preactivation, name=scope.name) #outputsize [batch_size, 16,16,192]
             self._activation_summary(conv2)
 
 
         dropout2 = tf.nn.dropout(conv2, keep_prob)
-        h_pool2 = self._create_max_pool_2x2(dropout2) #output size [batch_size, 7, 7, 50]
+        h_pool2 = self._create_max_pool_2x2(dropout2) #output size [batch_size, 8, 8, 192]
 
         with tf.variable_scope('dense') as scope:
-            reshape = tf.reshape(h_pool2, [-1, 7 * 7 * 50])
-            W_dense = self._create_weights([7 * 7 * 50, 500])
-            b_dense = self._create_bias([500])
+            reshape = tf.reshape(h_pool2, [-1, 8 * 8 * 192])
+	    #last inner-product layer has 1000 units instead of 500 in MNIST
+            W_dense = self._create_weights([8 * 8 * 192, 1000])
+            b_dense = self._create_bias([1000])
             dense = tf.nn.relu(tf.matmul(reshape, W_dense) + b_dense, name=scope.name)
             self._activation_summary(dense)
 
         with tf.variable_scope('logit') as scope:
-            W_logit = self._create_weights([500, self._num_labels])
+            #last inner-product layer has 1000 units instead of 500 in MNIST
+            W_logit = self._create_weights([1000, self._num_labels])
             b_logit = self._create_bias([self._num_labels])
             dense_drop = tf.nn.dropout(dense, keep_prob)
             logit = tf.nn.bias_add(tf.matmul(dense_drop, W_logit), b_logit, name=scope.name)
@@ -50,7 +54,7 @@ class Model(object):
     def train(self, loss, global_step):
         #should probably make these variables arguements but cba
         #learning_rate = tf.train.inverse_time_decay(self._learning_rate, global_step, decay_step, decay_rate)
-        learning_rate = td.poly_inverse_time_decay(self._learning_rate, global_step, decay_steps = 1, decay_rate = 0.0001, power = 0.75)
+        learning_rate = td.poly_inverse_time_decay(learning_rate = self._learning_rate, global_step = global_step, decay_steps = 1, decay_rate = 0.0001, power = 0.75)
         #optimizer = tf.train.GradientDescentOptimizer(learning_rate)
         optimizer = tf.train.MomentumOptimizer(learning_rate, momentum = 0.9, use_nesterov=True)
         train_op = optimizer.minimize(
@@ -93,6 +97,7 @@ class Model(object):
         tf.add_to_collection('losses', weight_decay)
         return var
 
+
     def _create_bias(self, shape):
         return tf.Variable(tf.constant(1., shape=shape, dtype=tf.float32))
 
@@ -100,4 +105,4 @@ class Model(object):
         #This is simply to catch information for visualization using tensorboard
         tensor_name = x.op.name
         tf.summary.histogram(tensor_name + '/activations', x) 
-        tf.summary.scalar(tensor_name + '/sparsity', tf.nn.zero_fraction(x))
+        tf.summary.scalar(tensor_name + '/sparsity', tf.nn.zero_fraction(x)) 
