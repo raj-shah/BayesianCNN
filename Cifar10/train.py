@@ -77,7 +77,7 @@ def main(argv=None):
 
 if __name__ == '__main__':
     tf.app.flags.DEFINE_integer('batch_size', 128, 'size of training batches')
-    tf.app.flags.DEFINE_integer('num_iter', 10000000, 'number of training iterations')
+    tf.app.flags.DEFINE_integer('num_iter', 100000, 'number of training iterations')
     tf.app.flags.DEFINE_string('checkpoint_file_path', 'checkpoints/model.ckpt', 'path to checkpoint file')
     tf.app.flags.DEFINE_string('summary_dir', 'graphs', 'path to directory for storing summaries')
 
