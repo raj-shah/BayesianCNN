@@ -28,7 +28,7 @@ def evaluate():
 		with tf.Session() as sess:
 			tf.global_variables_initializer().run()
 			saver.restore(sess, FLAGS.checkpoint_file_path)
-			for i in range(50):
+			for i in range(10):
 				softmaxi = sess.run([softmax],
 				                            feed_dict={x_: mnist.test.images, y: mnist.test.labels})
 				softmax_list.append(softmaxi)
