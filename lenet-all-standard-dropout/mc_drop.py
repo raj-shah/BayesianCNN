@@ -13,7 +13,7 @@ def evaluate():
 		x_ = tf.placeholder(tf.float32, shape=[None, 784]) #data gets loaded as a 28x8 vector
 		x = tf.reshape(x_,[-1,28,28,1],name = 'x')   #mnist dataset is shape 28,28,1
 		y = tf.placeholder(shape=[None, 10], dtype=tf.float32, name='y') #10 labels
-		softmax_tensors = tf.placeholder(tf.float32, shape=[50, 10000, 10])
+		softmax_tensors = tf.placeholder(tf.float32, shape=[FLAGS.T, 10000, 10])
 	
 		model = Model()
 		logits = model.inference(x, keep_prob=0.5)
@@ -28,7 +28,7 @@ def evaluate():
 		with tf.Session() as sess:
 			tf.global_variables_initializer().run()
 			saver.restore(sess, FLAGS.checkpoint_file_path)
-			for i in range(10):
+			for i in range(FLAGS.T):
 				softmaxi = sess.run([softmax],
 				                            feed_dict={x_: mnist.test.images, y: mnist.test.labels})
 				softmax_list.append(softmaxi)
@@ -48,4 +48,5 @@ def main(argv=None):
 
 if __name__ == '__main__':
     tf.app.flags.DEFINE_string('checkpoint_file_path', 'checkpoints/model.ckpt-10000000', 'path to checkpoint file')
+    tf.app.flags.DEFINE_integer('T', 10, 'Number of Forward Passes')
     tf.app.run()
