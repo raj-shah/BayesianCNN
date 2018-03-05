@@ -13,8 +13,9 @@ def train():
     with tf.Graph().as_default():
         # Load training data and use test as evaluation set in one hot format
         mnist_ = input_data.read_data_sets("MNIST_data/", one_hot=True)
-        images = mnist_.train.images[0:1719]
-        labels = mnist_.train.labels[0:1719]
+        perm =np.random.permutation(1719)
+        images = mnist_.train.images[perm]
+        labels = mnist_.train.labels[perm]
         print (images.shape) #[1719,28,28,1] np array
 
         x_ = tf.placeholder(tf.float32, shape=[None, 784]) #data gets loaded as a 28x8 vector
