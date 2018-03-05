@@ -24,7 +24,14 @@ def evaluate():
 		mean = tf.reduce_mean(softmax_tensors,0)
 		accuracy = model.accuracy(mean,y)
 
+
+		#this is for each forward pass accuracy
+		softmax_each=tf.placeholder(tf.float32, shape=[10000, 10])
+		accuracyi=model.accuracy(softmax_each,y)
+
+
 		softmax_list = []
+		accuracy_list = []
 		with tf.Session() as sess:
 			tf.global_variables_initializer().run()
 			saver.restore(sess, FLAGS.checkpoint_file_path)
@@ -32,13 +39,26 @@ def evaluate():
 				softmaxi = sess.run([softmax],
 				                            feed_dict={x_: mnist.test.images, y: mnist.test.labels})
 				softmax_list.append(softmaxi)
+
+
+
+				#added for accuracy of each forward pass:
+				print(softmaxi[0])
+				accuracyi1=sess.run([accuracyi],
+						feed_dict={softmax_each:np.squeeze(np.array(softmaxi[0])), y: mnist.test.labels})
+				accuracy_list.append(accuracyi1)
+				
 				
 			#mean_prob = sess.run([mean], feed_dict = {softmax_tensors: np.squeeze(np.array(softmax_list))})
 
 			total_accuracy = sess.run([accuracy],
 						feed_dict={softmax_tensors: np.squeeze(np.array(softmax_list)), y: mnist.test.labels})
-			print('Test accuracy: {}'.format(total_accuracy))
+			#print (softmax_list[0].shape)
+			standard_deviation=np.std(np.array(accuracy_list))
 
+			print('Test accuracy: {}'.format(total_accuracy))
+			print('Standard deviation of 10 forward passes:',standard_deviation)
+			print('Accuracy list is',accuracy_list)
 
 			
 			
@@ -47,6 +67,6 @@ def main(argv=None):
     evaluate()
 
 if __name__ == '__main__':
-    tf.app.flags.DEFINE_string('checkpoint_file_path', 'checkpoints/model.ckpt-10000000', 'path to checkpoint file')
+    tf.app.flags.DEFINE_string('checkpoint_file_path', 'checkpoints/model.ckpt-180000', 'path to checkpoint file')
     tf.app.flags.DEFINE_integer('T', 10, 'Number of Forward Passes')
     tf.app.run()
