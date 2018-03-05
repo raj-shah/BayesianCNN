@@ -70,7 +70,7 @@ def train():
                     test_batch_acc_total = 0
                     test_batch_count = 0
 
-                    for test_feature_batch, test_label_batch in batch_features_labels(images_test, labels_test, batch_size):
+                    for test_feature_batch, test_label_batch in batch_features_labels(images_test, labels_test, batch_size=100):
                         test_batch_acc_total += accuracy.eval(feed_dict={x: test_feature_batch, y: test_label_batch, keep_prob: 1.0})
                         test_batch_count += 1
 
