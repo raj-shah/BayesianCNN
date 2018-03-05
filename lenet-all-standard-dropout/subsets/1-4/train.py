@@ -31,7 +31,7 @@ def train():
         train_op = model.train(loss, global_step=global_step)
 
         batch_size = FLAGS.batch_size #batch size, this might not be correct size
-        input_size = 1719 #50,000 training images
+        input_size = 13750 
         porp = int(math.ceil(input_size/batch_size))
 
         init = tf.global_variables_initializer() 
