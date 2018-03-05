@@ -1,12 +1,9 @@
 
 import tensorflow as tf
-from tensorflow.examples.tutorials.mnist import input_data
 from Model import Model
 import CIFAR10
 import numpy as np
 import math
-
-
 
 FLAGS = tf.app.flags.FLAGS
 
@@ -41,7 +38,7 @@ def train():
         train_op = model.train(loss, global_step=global_step)
 
         init = tf.global_variables_initializer() 
-        saver = tf.train.Saver(max_to_keep = 100000)
+        saver = tf.train.Saver(max_to_keep = None)
 
         batch_size = FLAGS.batch_size #batch size, this might not be correct size
         input_size = 50000 #50,000 training images
@@ -64,12 +61,14 @@ def train():
                 _, cur_loss, summary = sess.run([train_op, loss, summary_op],
                                                 feed_dict={x: image_batch, y: label_batch, keep_prob: 0.5})
                 writer.add_summary(summary, i)
-                if i % 500 == 0:
-                    f = open('trainingStdDrop.log', 'a+')
+                f = open('trainingStdDrop.log', 'a+')
+                
+                if i % 1000 == 0:
                     validation_accuracy = accuracy.eval(feed_dict={x: images_test, y: labels_test, keep_prob: 1.0}) 
                     f.write('{}, {}, {} \n'.format(i, cur_loss, validation_accuracy))
-                    f.close()
                     saver.save(sess, FLAGS.checkpoint_file_path+"-"+str(i))
+                
+                f.close()
 
 def main(argv=None):
     train()
@@ -77,7 +76,7 @@ def main(argv=None):
 
 if __name__ == '__main__':
     tf.app.flags.DEFINE_integer('batch_size', 128, 'size of training batches')
-    tf.app.flags.DEFINE_integer('num_iter', 10000000, 'number of training iterations')
+    tf.app.flags.DEFINE_integer('num_iter', 100000, 'number of training iterations')
     tf.app.flags.DEFINE_string('checkpoint_file_path', 'checkpoints/model.ckpt', 'path to checkpoint file')
     tf.app.flags.DEFINE_string('summary_dir', 'graphs', 'path to directory for storing summaries')
 
