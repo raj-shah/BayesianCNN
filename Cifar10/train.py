@@ -44,10 +44,10 @@ def train():
         input_size = 50000 #50,000 training images
         porp = int(math.ceil(input_size/batch_size))
 
-        with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:
+        with tf.Session(config=tf.ConfigProto(log_device_placement=False)) as sess:
             writer = tf.summary.FileWriter(FLAGS.summary_dir, sess.graph)
             sess.run(init)
-            f = open('trainingStdDrop.log', 'a+')
+
             for i in range(FLAGS.num_iter):
                 if i%(porp) == 0:
                     permutation=np.random.permutation(input_size) #create a list with random indexes
@@ -62,17 +62,36 @@ def train():
                 _, cur_loss, summary = sess.run([train_op, loss, summary_op],
                                                 feed_dict={x: image_batch, y: label_batch, keep_prob: 0.5})
                 writer.add_summary(summary, i)
+
+                f = open('trainingStdDrop.log', 'a+')
                 
-                
-                if i % 100 == 0:
-                    validation_accuracy = accuracy.eval(feed_dict={x: images_test, y: labels_test, keep_prob: 1.0}) 
-                    print("Iteration: {}\tLoss: {}\tValidation Accuracy: {}\n".format(i, cur_loss, validation_accuracy))
-                    
+                if i % 10 == 0:
+                    # Get accuracy in batches for memory limitations
+                    test_batch_acc_total = 0
+                    test_batch_count = 0
+
+                    for test_feature_batch, test_label_batch in batch_features_labels(images_test, labels_test, batch_size):
+                        test_batch_acc_total += accuracy.eval(feed_dict={x: test_feature_batch, y: test_label_batch, keep_prob: 1.0})
+                        test_batch_count += 1
+
+                    validation_accuracy = test_batch_acc_total/test_batch_count
+                    #validation_accuracy = accuracy.eval(feed_dict={x: images_test, y: labels_test, keep_prob: 1.0}) 
+                    print("Iteration: {}\tLoss: {}\tValidation Accuracy: {}".format(i, cur_loss, validation_accuracy))
+                    f.write('{}, {}, {} \n'.format(i, cur_loss, validation_accuracy))
+
                     if i % 1000 == 0:
-                        f.write('{}, {}, {} \n'.format(i, cur_loss, validation_accuracy))
                         saver.save(sess, FLAGS.checkpoint_file_path+"-"+str(i))
-                
-            f.close()
+                        
+                f.close()
+
+def batch_features_labels(features, labels, batch_size):
+    """
+    Split features and labels into batches
+    """
+    for start in range(0, len(features), batch_size):
+        end = min(start + batch_size, len(features))
+        yield features[start:end], labels[start:end] 
+
 
 def main(argv=None):
     train()
