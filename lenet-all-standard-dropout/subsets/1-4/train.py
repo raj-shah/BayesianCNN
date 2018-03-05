@@ -55,7 +55,7 @@ def train():
                                                 feed_dict={x_: image_batch, y: label_batch, keep_prob: 0.5})
 
                 writer.add_summary(summary, i)
-                if i % 1000 == 0:
+                if i % 5000 == 0:
                     f = open('trainingStdDrop.log', 'a+')
                     validation_accuracy = accuracy.eval(feed_dict={x_: mnist_.test.images, y: mnist_.test.labels, keep_prob: 1.0}) 
                     f.write('{}, {}, {} \n'.format(i, cur_loss, validation_accuracy))
