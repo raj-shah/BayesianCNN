@@ -55,7 +55,7 @@ class Model(object):
         optimizer = tf.train.MomentumOptimizer(learning_rate, momentum = 0.9, use_nesterov=True)
         train_op = optimizer.minimize(
             loss=loss,
-            global_step=tf.train.get_global_step())
+            global_step=global_step)
         return train_op
 
     def loss(self, logits, labels):
