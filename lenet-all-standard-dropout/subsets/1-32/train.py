@@ -13,10 +13,10 @@ def train():
     with tf.Graph().as_default():
         # Load training data and use test as evaluation set in one hot format
         mnist_ = input_data.read_data_sets("MNIST_data/", one_hot=True)
-        perm =np.random.permutation(1719)
+        perm =np.random.permutation(1875)
         images = mnist_.train.images[perm]
         labels = mnist_.train.labels[perm]
-        print (images.shape) #[1719,28,28,1] np array
+        print (images.shape) #[1875,28,28,1] np array
 
         x_ = tf.placeholder(tf.float32, shape=[None, 784]) #data gets loaded as a 28x8 vector
         x = tf.reshape(x_,[-1,28,28,1],name = 'x')   #mnist dataset is shape 28,28,1
@@ -32,7 +32,7 @@ def train():
         train_op = model.train(loss, global_step=global_step)
 
         batch_size = FLAGS.batch_size #batch size, this might not be correct size
-        input_size = 1719 #50,000 training images
+        input_size = 1875
         porp = int(math.ceil(input_size/batch_size))
 
         init = tf.global_variables_initializer() 
