@@ -3,7 +3,7 @@ import poly_inverse_time_decay as td
 
 
 class Model(object):
-    def __init__(self, batch_size=64 , learning_rate=0.01, num_labels=10):
+    def __init__(self, batch_size=128, learning_rate=0.01, num_labels=10):
         self._batch_size = batch_size
         self._learning_rate = learning_rate
         self._num_labels = num_labels
