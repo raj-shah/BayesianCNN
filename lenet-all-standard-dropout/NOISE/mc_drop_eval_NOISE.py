@@ -70,6 +70,6 @@ def main(argv=None):
     evaluate()
 
 if __name__ == '__main__':
-    tf.app.flags.DEFINE_string('checkpoint_file_path', 'checkpoints/model.ckpt-0', 'path to checkpoint file')
-    tf.app.flags.DEFINE_integer('T', 10, 'Number of Forward Passes')
+    tf.app.flags.DEFINE_string('checkpoint_file_path', '/home/si318/Desktop/MLSALT4/lenet-all-standard-dropout/checkpoints/model.ckpt-5000000', 'path to checkpoint file')
+    tf.app.flags.DEFINE_integer('T', 50, 'number of forward passes')
     tf.app.run()
