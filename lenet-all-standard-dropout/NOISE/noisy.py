@@ -27,7 +27,7 @@ for i in range(len(noiseLevel)):
 		noisePlaces=np.random.choice([0, 1], size=(28,28), p=[1-noiseLevel[i], noiseLevel[i]])
 		noiseScale=np.random.rand(28,28)
 		noise=noiseScale*noisePlaces
-		noisy_image= np.mod(image + noise, 2)
+		noisy_image= np.mod(image + noise, 1)
 		#print (noisy_image.shape)
 		dataset[count2,:,:] = noisy_image
 		count2 += 1
