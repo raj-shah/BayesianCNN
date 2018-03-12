@@ -37,7 +37,7 @@ class Model(object):
         self.lr = tf.placeholder(tf.float32, shape=(), name='lr')
 
         self.logits = self._build_net(x)
-        cross_entropy = tf.nn.softmax_cross_entropy_with_logits_v2(logits=self.logits, labels=self.y)
+        cross_entropy = tf.nn.softmax_cross_entropy_with_logits(logits=self.logits, labels=self.y)
         self.loss = tf.reduce_mean(cross_entropy)
         optimizer = tf.train.MomentumOptimizer(self.lr, momentum=0.9, use_nesterov=True)
         self.train_op = optimizer.minimize(loss=self.loss)
