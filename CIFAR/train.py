@@ -8,6 +8,16 @@ from Model import Model
 logging.basicConfig(filename='log.out', level=logging.INFO)
 logger = logging.getLogger('train')
 
+
+def batch_features_labels(features, labels, batch_size):
+    """
+    Split features and labels into batches
+    """
+    for start in range(0, len(features), batch_size):
+        end = min(start + batch_size, len(features))
+        yield features[start:end], labels[start:end]
+    
+
 if __name__ == '__main__':
     
     batch_size = 128
