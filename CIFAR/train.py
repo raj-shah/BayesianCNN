@@ -70,7 +70,7 @@ if __name__ == '__main__':
                 test_batch_acc_total = 0
                 test_batch_count = 0
                 
-                for test_feature_batch, test_label_batch in batch_features_labels(images_test, labels_test, batch_size=100):
+                for test_feature_batch, test_label_batch in batch_features_labels(test_x, test_y, batch_size=100):
                     test_batch_acc_total += sess.run([model.val_acc], feed_dict={
                     model.x_: test_feature_batch,
                     model.y: test_label_batch
