@@ -11,13 +11,13 @@ tf.logging.set_verbosity(tf.logging.INFO)
 mnist = tf.contrib.learn.datasets.load_dataset("mnist")
 # train_data = mnist.train.images # np.array
 # train_labels = np.asarray(mnist.train.labels, dtype=np.int32)
-eval_data = mnist.test.images # np.array
-eval_labels = np.asarray(mnist.test.labels, dtype=np.int32)
-eval_data = eval_data.reshape(10000,28,28)
+eval_data = mnist.train.images # np.array
+eval_labels = np.asarray(mnist.train.labels, dtype=np.int32)
+eval_data = eval_data.reshape(55000,28,28)
 
 
 for i in range(len(noiseLevel)):
-	dataset = np.zeros([10000,28,28])
+	dataset = np.zeros([55000,28,28])
 	count2 = 0
 	for image in eval_data:
 		image = image.reshape(28,28)
